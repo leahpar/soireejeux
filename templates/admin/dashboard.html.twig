@@ -1,0 +1,104 @@
+{# {% extends '@!EasyAdmin/layout.html.twig' %} #}
+
+{# https://symfony.com/bundles/EasyAdminBundle/current/dashboards.html#content-page-template #}
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Hello World!{% endblock %}
+
+{% block main %}
+
+    <div style="width: 300px; height: 400px;">
+        <h3>Jeux</h3>
+        <canvas id="module1" width="150" height="150"></canvas>
+    </div>
+
+    <div>
+        <h3>Choisir un jeu</h3>
+        <form method="post">
+            <input type="number" name="joueurs" placeholder="Nombre de joueurs" min="1">
+            <input type="submit">
+        </form>
+        {% for jeu in jeux_possibles %}
+            <table>
+                <tr>
+                    <td>{{ jeu.nom }}</td>
+                    <td>{{ jeu.joueursMin }} à {{ jeu.joueursMax }} joueurs</td>
+                </tr>
+            </table>
+        {% endfor %}
+    </div>
+
+{% endblock main %}
+
+
+{% block body_javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+
+        window.chartColors = {
+            red:    'rgb(250,  104,  97)',
+            orange: 'rgb(255, 159,  64)',
+            yellow: 'rgb(255, 205,  86)',
+            green:  'rgb( 27, 108, 165)',
+            blue:   'rgb( 27, 108, 165)',
+            purple: 'rgb(153, 102, 255)',
+            grey:   'rgb(185, 187, 191)',
+            aqua:	'rgb(0, 227, 222)'
+        };
+
+        let ctx1 = document.getElementById('module1').getContext('2d');
+        let chart1 = new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        {% for jeu in jeux %}
+                        "{{ jeu.nbParties }}",
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        window.chartColors.yellow,
+                        window.chartColors.red,
+                    ],
+                    borderWidth: 5,
+                }],
+                labels: [
+                    {% for jeu in jeux %}
+                    "{{ jeu.nom }}",
+                    {% endfor %}
+                ]
+            },
+            // Configuration options go here
+            options: {
+                title: {
+                    display: false,
+                    text: 'Impayés',
+                },
+                legend: {
+                    position: 'bottom',
+                    align: 'start',
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function(tooltipItem, data) {
+                            return data['labels'][tooltipItem[0]['index']];
+                        },
+                        label: function(tooltipItem, data) {
+                            let dataset = data['datasets'][0];
+                            let value = dataset['data'][tooltipItem['index']];
+                            let percent = Math.round((value / dataset["_meta"][0]['total']) * 100);
+                            return "" + value2euro(value) + ' (' + percent + '%)';
+                        },
+                    },
+                    //backgroundColor: '#FFF',
+                    //titleFontSize: 16,
+                    //titleFontColor: '#0066ff',
+                    //bodyFontColor: '#000',
+                    //bodyFontSize: 14,
+                    //displayColors: false
+                },
+            }
+        });
+    </script>
+
+{% endblock body_javascript %}

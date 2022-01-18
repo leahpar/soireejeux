@@ -19,22 +19,19 @@ class JeuRepository extends ServiceEntityRepository
         parent::__construct($registry, Jeu::class);
     }
 
-    // /**
-    //  * @return Jeu[] Returns an array of Jeu objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Jeu[] Returns an array of Jeu objects
+     */
+    public function findForNbJoueurs(int $joueurs)
     {
         return $this->createQueryBuilder('j')
-            ->andWhere('j.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('j.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('j.joueursMin <= :val')
+            ->andWhere('j.joueursMax >= :val')
+            ->setParameter('val', $joueurs)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Jeu

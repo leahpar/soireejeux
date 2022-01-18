@@ -17,14 +17,26 @@ class Score
     public function __construct(
         #[ORM\ManyToOne(targetEntity: Joueur::class, inversedBy: "scores")]
         #[ORM\JoinColumn(nullable: false)]
-        public Joueur $joueur,
+        public ?Joueur $joueur = null,
 
         #[ORM\ManyToOne(targetEntity: Partie::class, inversedBy: "scores")]
         #[ORM\JoinColumn(nullable: false)]
-        public Partie $partie,
+        public ?Partie $partie = null,
 
         #[ORM\Column(type:"integer")]
-        public int $score,
+        public ?int $score = null,
     ) {}
+
+    public function __toString(): string
+    {
+        return
+            "{"
+            . $this->joueur?->nom
+            . ':'
+            . $this->score
+            . "}"
+            ;
+    }
+
 
 }
