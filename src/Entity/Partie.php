@@ -19,6 +19,7 @@ class Partie
     public ?Score $scoreMax = null;
 
     #[ORM\OneToMany(mappedBy: "partie", targetEntity: Score::class, cascade: ['persist'])]
+    #[ORM\OrderBy(['score' => 'DESC'])]
     public Collection|array $scores;
 
     public function __construct(
@@ -77,7 +78,7 @@ class Partie
 
     public function label(): ?string
     {
-        if (!$this->scoreMax) return null;
+        if (!$this->getScoreMax()) return null;
 
         setlocale(LC_ALL, "fr_FR.UTF-8");
         $date = strftime("%e %b %Y", $this->date->getTimestamp());

@@ -60,11 +60,11 @@ class Jeu
         //    0
         //);
 
-        if (!$this->partieMax) {
+        if ($this->partieMax == null) {
             $max = null;
             /** @var Partie $partie */
             foreach ($this->parties as $partie) {
-                if ($max == null || $partie->getScoreMax()->score > $max->getScoreMax()->score) {
+                if ($max == null || ($partie->getScoreMax()->score > $max->getScoreMax()->score)) {
                     $max = $partie;
                 }
             }
