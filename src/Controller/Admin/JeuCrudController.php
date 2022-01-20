@@ -6,6 +6,7 @@ use App\Entity\Jeu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -53,6 +54,14 @@ class JeuCrudController extends AbstractCrudController
             // the max number of entities to display per page
             ->setPaginatorPageSize(50)
             //->showEntityActionsInlined()
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('joueursMin')
+            ->add('joueursMax')
             ;
     }
 

@@ -9,18 +9,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    private EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator,
+        private EntityManagerInterface $em,
+    ) {}
 
     public function configureDashboard(): Dashboard
     {
@@ -43,19 +43,32 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $jeux = $this->em->getRepository(Jeu::class)->findAll();
-        $parties = $this->em->getRepository(Partie::class)->findAll();
-
-        $jeuxPossibles = [];
-        //if ($this->request->isMethod("POST")) {
-        //    $nbJoueurs = $this->request->request->get('joueurs', 0);
-        //    $jeuxPossibles = $this->em->getRepository(Jeu::class)->findForNbJoueurs($nbJoueurs);
-        //}
+        //$parties = $this->em->getRepository(Partie::class)->findAll();
 
         return $this->render('admin/dashboard.html.twig', [
             'jeux' => $jeux,
-            'jeux_possibles' => $jeuxPossibles,
         ]);
+    }
 
+    #[Route('/admin/choisir-un-jeu', name: 'choisir_un_jeu', methods: ["POST"])]
+    public function choisirJeu(Request $request)
+    {
+        return $this->redirect(
+            $this->adminUrlGenerator
+                ->setController(JeuCrudController::class)
+                ->setAction("index")
+                ->set('filters', [
+                    "joueursMin" => [
+                        "comparison" => "<=",
+                        "value" => $request->get('joueurs')
+                    ],
+                    "joueursMax" => [
+                        "comparison" => ">=",
+                        "value" => $request->get('joueurs')
+                    ]
+                ])
+                ->generateUrl()
+        );
     }
 
 

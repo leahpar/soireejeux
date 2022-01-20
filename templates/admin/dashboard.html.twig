@@ -14,18 +14,10 @@
 
     <div>
         <h3>Choisir un jeu</h3>
-        <form method="post">
-            <input type="number" name="joueurs" placeholder="Nombre de joueurs" min="1">
+        <form method="post" action="{{ path('choisir_un_jeu') }}">
+            <input type="number" name="joueurs" placeholder="Nombre de joueurs" min="1" required>
             <input type="submit">
         </form>
-        {% for jeu in jeux_possibles %}
-            <table>
-                <tr>
-                    <td>{{ jeu.nom }}</td>
-                    <td>{{ jeu.joueursMin }} à {{ jeu.joueursMax }} joueurs</td>
-                </tr>
-            </table>
-        {% endfor %}
     </div>
 
 {% endblock main %}
@@ -75,6 +67,7 @@
                     text: 'Impayés',
                 },
                 legend: {
+                    display: false,
                     position: 'bottom',
                     align: 'start',
                 },
@@ -87,15 +80,9 @@
                             let dataset = data['datasets'][0];
                             let value = dataset['data'][tooltipItem['index']];
                             let percent = Math.round((value / dataset["_meta"][0]['total']) * 100);
-                            return "" + value2euro(value) + ' (' + percent + '%)';
+                            return "" + value + ' (' + percent + '%)';
                         },
                     },
-                    //backgroundColor: '#FFF',
-                    //titleFontSize: 16,
-                    //titleFontColor: '#0066ff',
-                    //bodyFontColor: '#000',
-                    //bodyFontSize: 14,
-                    //displayColors: false
                 },
             }
         });
