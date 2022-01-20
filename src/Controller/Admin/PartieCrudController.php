@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Partie;
 use App\Form\ScoreType;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field;
 
@@ -32,6 +33,13 @@ class PartieCrudController extends AbstractCrudController
             ->onlyOnIndex();
         yield Field\TextField::new('resultat')
             ->onlyOnIndex();
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('jeu')
+            ;
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void

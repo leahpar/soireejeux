@@ -3,15 +3,45 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Jeu;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class JeuCrudController extends AbstractCrudController
 {
+
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {}
+
     public static function getEntityFqcn(): string
     {
         return Jeu::class;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $action = Action::new('search_parties', 'Parties')
+            ->linkToUrl(fn (Jeu $j) =>
+                $this->adminUrlGenerator
+                ->setController(PartieCrudController::class)
+                ->setAction("index")
+                ->set('filters', [
+                    "jeu" => [
+                        "comparison" => "=",
+                        "value" => $j->id
+                    ]
+                ])
+                ->generateUrl()
+            );
+
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $action)
+        ;
     }
 
     /**
@@ -22,6 +52,7 @@ class JeuCrudController extends AbstractCrudController
         return $crud
             // the max number of entities to display per page
             ->setPaginatorPageSize(50)
+            //->showEntityActionsInlined()
             ;
     }
 
@@ -40,6 +71,13 @@ class JeuCrudController extends AbstractCrudController
             ->onlyOnIndex();
         yield Field\IntegerField::new('scoreMax.label')
             ->setLabel("Meilleur score")
+            ->onlyOnIndex();
+        yield Field\IntegerField::new('joueurMax')
+            ->formatValue(fn($j) => $j
+                ? ($j['joueur'] . ' ('.round($j['ratio']*100) . '%)')
+                //? ($j['joueur'] . ' ('.$j['victoires'].'/'.$j['parties'] .')')
+                : null)
+            ->setLabel("Meilleur joueur")
             ->onlyOnIndex();
     }
 }

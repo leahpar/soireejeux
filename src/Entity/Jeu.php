@@ -54,12 +54,6 @@ class Jeu
 
     public function getScoreMax(): ?Partie
     {
-        //$score = array_reduce(
-        //    $this->parties->toArray(),
-        //    fn($m, Partie $p) => max($m, $p->getScoreMax()->score),
-        //    0
-        //);
-
         if ($this->partieMax == null) {
             $max = null;
             /** @var Partie $partie */
@@ -72,6 +66,51 @@ class Jeu
         }
 
         return $this->partieMax;
+    }
+
+    public function getJoueurMax()
+    {
+        if (count($this->parties) == 0) return null;
+
+        $joueurs = [];
+
+        /** @var Partie $partie */
+        foreach ($this->parties as $partie) {
+            /** @var Score $score */
+            foreach ($partie->scores as $score) {
+                $joueur = $score->joueur;
+                if (!isset($joueurs[$joueur->id])) {
+                    $joueurs[$joueur->id] = [
+                        'joueur' => $joueur,
+                        'parties' => 0,
+                        'victoires' => 0,
+                    ];
+                }
+                $joueurs[$joueur->id]['parties']++;
+            }
+            $joueur = $partie->getScoreMax()->joueur;
+            $joueurs[$joueur->id]['victoires']++;
+        }
+
+        array_walk(
+            $joueurs,
+            fn(&$j) => $j['ratio'] = $j['victoires'] / $j['parties']
+        );
+
+        usort(
+            $joueurs,
+            fn ($a, $b) => $a['ratio'] <=> $b['ratio']
+        );
+
+        $joueurs = array_filter(
+            $joueurs,
+            fn($j) => $j['parties'] >= 3,
+        );
+
+        if (count($joueurs) == 0) return null;
+
+        //return $joueurs[count($joueurs)-1];
+        return end($joueurs);
     }
 
 }
