@@ -42,7 +42,8 @@ class DashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        $jeux = $this->em->getRepository(Jeu::class)->findAll();
+        // TODO: ORDER BY
+        $jeux = $this->em->getRepository(Jeu::class)->findJeuxOrderByParties();
         //$parties = $this->em->getRepository(Partie::class)->findAll();
 
         return $this->render('admin/dashboard.html.twig', [

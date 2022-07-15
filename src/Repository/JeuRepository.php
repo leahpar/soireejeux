@@ -22,12 +22,10 @@ class JeuRepository extends ServiceEntityRepository
     /**
      * @return Jeu[] Returns an array of Jeu objects
      */
-    public function findForNbJoueurs(int $joueurs)
+    public function findJeuxOrderByParties()
     {
         return $this->createQueryBuilder('j')
-            ->andWhere('j.joueursMin <= :val')
-            ->andWhere('j.joueursMax >= :val')
-            ->setParameter('val', $joueurs)
+            ->orderBy('count(j.parties)')
             ->getQuery()
             ->getResult()
         ;
