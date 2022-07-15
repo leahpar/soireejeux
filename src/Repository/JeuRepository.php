@@ -25,21 +25,13 @@ class JeuRepository extends ServiceEntityRepository
     public function findJeuxOrderByParties()
     {
         return $this->createQueryBuilder('j')
-            ->orderBy('count(j.parties)')
+            ->leftJoin('j.parties', 'p')
+            ->addSelect('count(p.id) AS HIDDEN cpt')
+            ->groupBy('j.id')
+            ->orderBy('cpt', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Jeu
-    {
-        return $this->createQueryBuilder('j')
-            ->andWhere('j.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
