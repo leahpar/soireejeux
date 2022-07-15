@@ -27,26 +27,16 @@ DOCKER          = docker-compose
 # Port pour le serveur symfony local
 PORT            = 8010
 
-TARGET_PHP		= 8.0
+TARGET_PHP		= 8.1
 
 include .env
 include .env.local
-
 
 sfstart: sfstop ## Start local Symfony werserver
 	symfony server:start -d --port=$(PORT) --allow-http
 
 sfstop: ## Stop local Symfony werserver
 	symfony server:stop
-
-dstart: ## Start the local Symfony web server
-	docker exec -i php8 bash -c "cd $(PWD) && make sfstart"
-
-dstop: ## Stop the local Symfony web server
-	docker exec -i php8 bash -c "cd $(PWD) && make sfstop"
-
-dcc: ## Stop the local Symfony web server
-	docker exec -i php8 bash -c "cd $(PWD) && $(SYMFONY) c:c --env=$(APP_ENV)"
 
 .PHONY: sfstart sfstop dstart dstop dcc
 
