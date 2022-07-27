@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<style>
+    * {margin: 0}
+
+    #dashboard {
+        padding: 20px;
+        display: flex;
+        height: 100%;
+        width: 90%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    #dashboard .card {
+        margin: 20px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        padding: 20px;
+        background-color: #fff;
+        height: 100px;
+    }
+    #dashboard .card h2 {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    #dashboard ul li {
+        margin-bottom: 10px;
+    }
+
+</style>
+
+    <a href="{{ path('admin') }}">Admin</a>
+<div id="dashboard">
+
+    {% for jeu in jeux %}
+        <div class="card">
+            <h2>{{ jeu.nom }}</h2>
+            <h3>{{ jeu.variante }}</h3>
+            <p>{{ jeu.joueursMin }} à {{ jeu.joueursMax }} joueurs</p>
+        </div>
+    {% endfor %}
+
+</div>
+{% endblock %}
