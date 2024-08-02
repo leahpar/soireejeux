@@ -25,7 +25,7 @@ DOCKER          = docker-compose
 #ENV_ROOT		= A DEFINIR
 
 # Port pour le serveur symfony local
-PORT            = 8010
+PORT            = 8012
 
 TARGET_PHP		= 8.1
 
