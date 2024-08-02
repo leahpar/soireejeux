@@ -6,10 +6,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
+        "beberlei/doctrineextensions": "^1.5",
         "composer/package-versions-deprecated": "1.11.99.4",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
@@ -79,9 +80,11 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
+            "php update-vendors.php",
             "@auto-scripts"
         ],
         "post-update-cmd": [
+            "php update-vendors.php",
             "@auto-scripts"
         ]
     },
