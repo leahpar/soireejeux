@@ -23,3 +23,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    # Override the default entity repository (ajout gestion order by RAND())
+    EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository: ~
+    App\Repository\EntityRepository:
+        decorates: EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository

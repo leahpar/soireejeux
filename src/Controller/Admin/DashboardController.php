@@ -68,6 +68,7 @@ class DashboardController extends AbstractDashboardController
                         "value" => $request->get('joueurs')
                     ]
                 ])
+                ->set('sort', ["rand()" => "ASC"])
                 ->generateUrl()
         );
     }
